@@ -32,5 +32,18 @@ def graph_generator(vertex: int, density: float):
             graphs.append(key)
 
     print(f"The number of generated graph is {len(graphs)}")
+    
+    
+    # пишемо "перекладач" з матриці суміжності у списки суміжності
+    adj_lst = {} # список суміжності
+    for key in adj_matrix:
+        if not key in adj_lst:
+            adj_lst.setdefault(key[0], []).append(key[1])
+        else:
+            adj_lst[key[0]].append(key[1])
 
-    return graphs
+    return graphs, adj_lst
+
+# graph_generator()
+
+
