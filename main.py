@@ -31,7 +31,7 @@ def tester(vertex: int, density: float) -> float:
 
 def main():
 
-    for vertex in range(20, 200, 10):
+    for vertex in range(20, 201, 10):
         print(vertex)
 
         for density in range(10, 100, 10):
