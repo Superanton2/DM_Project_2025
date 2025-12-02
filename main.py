@@ -46,40 +46,8 @@ def main():
             with open("test.csv", "a") as file:
                 to_append = f"{vertex}, {density}, {test_time:10f}\n"
                 file.write(to_append)
-        #
-# не менше п’яти різних значень щільності та не менше
-# десяти різних розмірів графу
+
 
 
 
 main()
-
-    # vertex = input("Enter number of vertexes in range 20 to 200: ")  # кількість вершин
-#     while True:
-#         while not vertex.isdigit():
-#             vertex = input("Enter digits only. Enter number of vertexes in range 20 to 200: ")
-#
-#         if 20 <= int(vertex) <= 200:
-#             vertex = int(vertex)
-#             break
-#         else:
-#             vertex = input("Enter digits in range 20 to 200 only. Enter number of vertexes in range 20 to 200: ")
-#
-#     density = input("Enter density in range 0 to 1: ") # очікувана щільність(відношення к-сті утворених графів до к-сті можливих)
-#     while True:
-#
-#         try:
-#             density = float(density)
-#         except ValueError:
-#             density = input("Enter numbers only. Enter density in range 0 to 1: ")
-#             continue
-#
-#         if 0 <= float(density) <= 1:
-#             density = float(density)
-#             break
-#         else:
-#             density = input("Enter density in range 0 to 1 only: ")
-
-
-# 0.0001031670
-# 0.00009045800000029303
