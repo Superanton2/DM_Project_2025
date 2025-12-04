@@ -1,86 +1,85 @@
-import random
-
-
-def graph_generator(vertex: int, density: float, test=None):
-
+def visit_vertex_matrix(graph: list[tuple[int, int]], vertex: dict[int, bool], current_vertex: int, sorted_vertex: list[int]) -> list[int]:
     """
-    генератор графів
-    герерує список суміжностей та матрицю суміжності
-    при тестуванні (test == True) ми не виводимо інформацію про кількість графів задля візуальної чистоти терміналу
+    ця функції перевіряє чи відвідали ми всіх сусідів цієї вершини
+        якщо всі сусіди відвідані, то вставляє цей елемент першим в список
+        якщо ні, то переходить до сусідів і коли води відмічені додає першим в список
 
-    :param vertex: кількість вершин. Від 20 до 200
-    :param density: відсоток того як багато буде зʼєднано. Від 0 до 1
-    :return: список суміжності та матрицю суміжності
+    також ця функція відмічає вершини які вона відвідала
+
+    :param graph: тут має бути граф у вигляді [(1, 7), (1, 12), ... ]
+    :param vertex: тут мають бути всі вершини і чи відвідали ми ці вершини {1: False, 7: False, 12: False, ... }
+    :param current_vertex: це вершина в якій ми зараз знаходимось
+    :param sorted_vertex: це список в який записується послідовність елементів в правильній послідовності
+
+    :return: повертає список в який записується послідовність елементів в правильній послідовності
     """
+    # позначаємо що ми відвідали вершину
+    vertex[current_vertex] = True
 
-    # створюємо словник усіх можливих пар, окрім петель (блок який перевіряє чи рівні числа) та циклів. Для кожної пари значення 0(нема графу) або 1(є граф)
+    # виписуємо всі елементи в які йде звязов з current_vertex
+    neighbor_of_current_vertex = [edge for edge in graph if edge[0] == current_vertex]
 
-    adjacency_matrix = {}
-    for num1 in range(1, vertex + 1):
-        for num2 in range(num1 + 1, vertex + 1):
-            if num1 == num2:
-                pass
-            else:
-                key = (num1, num2)
-                adjacency_matrix.setdefault(key)
+    # перевіряємо кожен такий звʼязок
+    for edge in neighbor_of_current_vertex:
+        # якщо він не відвіданий, то ми відвідуємо його
+        if not vertex[edge[1]]:
+            visit_vertex_matrix(graph, vertex, edge[1], sorted_vertex)
 
-    # пишемо алгоритм Ердеша-Реньї, який вставлятиме в рандомні місця в матриці одинички(створюватиме графи) основуючись на заданій щільності
+    # після того як відвідали всі вершини, вставляємо цей елемент першим в список
+    sorted_vertex.insert(0, current_vertex)
 
-    if test == None or test == False:  # при тестуванні (test == True) ми не виводимо інформацію про кількість ребер задля візуальної чистоти терміналу
-        print(f"The max possible number of  directed acyclic graph is {len(adjacency_matrix)}")
-
-    for key in adjacency_matrix:
-        chance = random.uniform(0, 1)
-        if chance < 1 - density:
-            adjacency_matrix[key] = 0
-        else:
-            adjacency_matrix[key] = 1
-
-    graphs = []
-    for key in adjacency_matrix:
-        if adjacency_matrix[key] == 1:
-            graphs.append(key)
-
-    if test == None or test == False:  # при тестуванні (test == True) ми не виводимо інформацію про кількість ребер задля візуальної чистоти терміналу
-        print(f"The number of generated graph is {len(graphs)}")
-
-    # пишемо "перекладач" з матриці суміжності у списки суміжності
-
-    adjacency_lst = {}  # список суміжності
-    for key in adjacency_matrix:
-        if not key in adjacency_lst and adjacency_matrix[key] == 1:  # для кожної вершини,  якщо її немає в нашому списку суміжності, то ми створюємо пустий список, в який згодом додаватимемо вершини, до яких від першої йдуть ребра
-            adjacency_lst.setdefault(key[0], []).append(key[1])
-        elif not key in adjacency_lst and not adjacency_matrix[key]:
-            adjacency_lst.setdefault(key[0], [])
-        else:
-            adjacency_lst[key[0]].append(key[1])  # до списку суміжності для кожної вершини ми додаємо вершину, до якої є ребро
-
-    adjacency_lst.setdefault(vertex, [])
-    return graphs, adjacency_lst
+    return sorted_vertex
 
 
-def get_vertex_matrix(graph: list[tuple[int, int]]) -> dict[int, bool]:
+
+def topological_sort_matrix(graph: list[tuple[int, int]], vertexes: dict[int, bool]) -> list[int]:
     """
-    це функція яка з отриманого графа виписує всі вершини які там є і чи відвідали ми цю вершину
+    це тіло алгоритма топологічного сортування
 
-    :param graph: отримує грав заданий матрицею суміжності (списком пар)
-    :return: повертає словних з вершини і значення чи відвідав ми цю вершину
+    :param graph: тут має бути граф у вигляді [(1, 7), (1, 12), ... ]
+    :param vertex: тут мають бути всі вершини і чи відвідали ми ці вершини {1: False, 7: False, 12: False, ... }
+    :return: повертає список відсортованих вершин.
+             Тобто в якій послідовності їх треба відвідати
     """
-    vertexes = []
-    for first, second in graph:
-        vertexes.append(first)
-        vertexes.append(second)
+    sorted_vertexes = []
 
-    vertexes_dict = {k: False for k in vertexes}
+    # проходимось по кожній вершині
+    for vertex in vertexes:
+        # якщо вона не відвідана, то відвідуємо її
+        if not vertexes[vertex]:
+            visit_vertex_matrix(graph, vertexes, vertex, sorted_vertexes)
 
-    return vertexes_dict
+
+    return sorted_vertexes
 
 
-def get_vertex_list(adjacency_lst: dict[int, int]) -> dict[int, bool]:
-    vertexes = []
-    for vertex in adjacency_lst.keys():
-        vertexes.append(vertex)
 
-    vertexes_dict = {vertex: False for vertex in vertexes}
+def visit_vertex_list(graph: dict[int, int], vertexes: dict[int, bool], current_vertex: int, sorted_vertex: list[int]) -> list[int]:
+    # позначаємо що ми відвідали вершину
+    vertexes[current_vertex] = True
 
-    return vertexes_dict
+    # перевіряємо кожен такий звʼязок
+    for vertex1, vertexes2 in graph.items():
+        # якщо він не відвіданий, то ми відвідуємо його
+        for vertex2 in vertexes2:
+            if vertex1 == current_vertex:
+                if not vertexes[vertex2]:
+                    visit_vertex_list(graph, vertexes, vertex2, sorted_vertex)
+
+    # після того як відвідали всі вершини, вставляємо цей елемент першим в список
+    sorted_vertex.insert(0, current_vertex)
+
+    return sorted_vertex
+
+
+
+def topological_sort_list(graph: dict[int, int], vertexes: dict[int, bool]) -> list[int]:
+    sorted_vertexes = []
+
+    # проходимось по кожній вершині
+    for vertex in vertexes:
+        # якщо вона не відвідана, то відвідуємо її
+        if not vertexes[vertex]:
+            visit_vertex_list(graph, vertexes, vertex, sorted_vertexes)
+
+    return sorted_vertexes
