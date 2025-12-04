@@ -25,7 +25,7 @@ def graph_generator(vertex: int, density: float, test = None):
 
     # пишемо алгоритм Ердеша-Реньї, який вставлятиме в рандомні місця в матриці одинички(створюватиме графи) основуючись на заданій щільності
 
-    if test == None or test == False: # при тестуванні (test == True) ми не виводимо інформацію про кількість графів задля візуальної чистоти терміналу 
+    if test == None or test == False: # при тестуванні (test == True) ми не виводимо інформацію про кількість ребер задля візуальної чистоти терміналу 
         print(f"The max possible number of  directed acyclic graph is {len(adjacency_matrix)}")
     
     for key in adjacency_matrix:
@@ -40,7 +40,7 @@ def graph_generator(vertex: int, density: float, test = None):
         if adjacency_matrix[key] == 1:
             graphs.append(key)
 
-    if test == None or test == False: # при тестуванні (test == True) ми не виводимо інформацію про кількість графів задля візуальної чистоти терміналу 
+    if test == None or test == False: # при тестуванні (test == True) ми не виводимо інформацію про кількість ребер задля візуальної чистоти терміналу 
         print(f"The number of generated graph is {len(graphs)}")
 
     # пишемо "перекладач" з матриці суміжності у списки суміжності
@@ -70,3 +70,4 @@ def get_vertex(graph: list[tuple[int, int]]) -> dict[int, bool]:
 
 
     return vertexes_dict
+
