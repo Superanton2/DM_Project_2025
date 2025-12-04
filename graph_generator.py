@@ -59,7 +59,7 @@ def graph_generator(vertex: int, density: float, test=None):
     return graphs, adjacency_lst
 
 
-def get_vertex(graph: list[tuple[int, int]]) -> dict[int, bool]:
+def get_vertex_matrix(graph: list[tuple[int, int]]) -> dict[int, bool]:
     """
     це функція яка з отриманого графа виписує всі вершини які там є і чи відвідали ми цю вершину
 
@@ -71,6 +71,17 @@ def get_vertex(graph: list[tuple[int, int]]) -> dict[int, bool]:
         vertexes.append(first)
         vertexes.append(second)
 
-    vertexes_dict = {k: False for k in vertexes}
+    vertexes_dict = {vertex: False for vertex in vertexes}
+
+    return vertexes_dict
+
+
+
+def get_vertex_list(adjacency_lst: dict[int, int]) -> dict[int, bool]:
+    vertexes = []
+    for vertex in adjacency_lst.keys():
+        vertexes.append(vertex)
+
+    vertexes_dict = {vertex: False for vertex in vertexes}
 
     return vertexes_dict
