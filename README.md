@@ -6,7 +6,9 @@
 Автори:
   - [Anton Fedoriv](https://github.com/Superanton2)  
   - [Andrew Korzh](https://github.com/clafish)  
-  - [Kateryna Sadovska](https://github.com/Shlyapkas)  
+  - [Kateryna Sadovska](https://github.com/Shlyapkas)
+
+
 Документ: [гугл документ](https://docs.google.com/document/d/1NpEg4FQb0rTt3JI4L8anyVpce2HQUAiGS4nFT-Sv94Q/edit?usp=sharing)
   
 ## Тестування  
