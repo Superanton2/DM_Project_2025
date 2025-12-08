@@ -1,13 +1,14 @@
 import random
 
 
-def graph_generator(vertex: int, density: float):
+def graph_generator(vertex: int, density: float, test= False):
     """
     генератор графів
     герерує список суміжностей та матрицю суміжності
 
     :param vertex: кількість вершин. Від 20 до 200
     :param density: відсоток того як багато буде зʼєднано. Від 0 до 1
+    :param test: параметр який відповідає який режим буде дефолтний False
     :return: список суміжностей та матрицю суміжності
     """
 
@@ -23,8 +24,8 @@ def graph_generator(vertex: int, density: float):
                 adjacency_matrix.setdefault(key)
 
     # пишемо алгоритм Ердеша-Реньї, який вставлятиме в рандомні місця в матриці одинички(створюватиме графи) основуючись на заданій щільності
-
-    # print(f"The max possible number of  directed acyclic graph is {len(adjacency_matrix)}")
+    if not test:
+        print(f"The max possible number of directed acyclic graph is {len(adjacency_matrix)}")
 
     for key in adjacency_matrix:
         chance = random.uniform(0, 1)
@@ -38,7 +39,8 @@ def graph_generator(vertex: int, density: float):
         if adjacency_matrix[key] == 1:
             graphs.append(key)
 
-    # print(f"The number of generated graph is {len(graphs)}")
+    if not test:
+        print(f"The number of generated graph is {len(graphs)}")
 
     # пишемо "перекладач" з матриці суміжності у списки суміжності
 
