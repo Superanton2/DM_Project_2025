@@ -1,6 +1,25 @@
 import matplotlib.pyplot as plt
+import networkx as nx
 import pandas as pd
 import os
+
+def print_single_test(lst_of_graphs: list[tuple[int, int]], vertex: dict[int, bool]):
+    """
+    намалювати граф по вершинам та ребрам
+
+    :param lst_of_graphs:
+    :param vertex:
+    :return:
+    """
+    graph = nx.Graph()
+
+
+    graph.add_nodes_from(vertex)
+    graph.add_edges_from(lst_of_graphs)
+
+    nx.draw(graph, with_labels=True, arrows=True, node_color='lightblue', edge_color='gray', node_size=250)
+    plt.axis('off')
+    plt.show()
 
 def search_global_maximum() -> float:
     """
@@ -156,3 +175,75 @@ def get_stats():
 # visualization()
 # get_stats()
 
+
+def plot_test_on_vertex(vertex: int, filename: str):
+    # читаємо данні з .csv
+    column_names = ['vertex_count', 'percentage of density', 'time']
+    df = pd.read_csv(filename, header=None, names=column_names)
+
+    fig, ax = plt.subplots(1, 1, figsize=(8, 6))
+
+    # рахуємо середнє значення
+    mean_values = df.groupby('percentage of density')['time'].mean()
+
+    ax.plot(df['percentage of density'], df['time'], 'o', alpha=0.5, color='green')
+    ax.plot(mean_values.index, mean_values.values, color='orange', linewidth=3, label='Середній час')
+
+
+    ax.set_title(f'Dependence of time on density in {vertex} vertex', fontsize=14)
+    ax.set_ylabel('Time')
+    ax.set_xlabel('Density')
+    ax.grid(True)
+    ax.legend()
+
+
+    # зберігаємо графік
+    plt.savefig(f'tests_vertex/plot_{vertex}.png')
+    plt.show()
+    plt.close()
+
+def plot_test_on_density(density, filename):
+    # читаємо данні з .csv
+    column_names = ['vertex_count', 'percentage of density', 'time']
+    df = pd.read_csv(filename, header=None, names=column_names)
+
+    fig, ax = plt.subplots(1, 1, figsize=(8, 6))
+
+    # рахуємо середнє значення
+    mean_values = df.groupby('percentage of density')['time'].mean()
+
+    # Побудова: X = df['percentage of density'], Y = df['time']
+    ax.plot(df['vertex_count'], df['time'], 'o', alpha=0.5, color='green')
+    ax.plot(mean_values.index, mean_values.values, color='orange', linewidth=3, label='Середній час')
+
+    ax.set_title(f'Dependence of time on {density}% density', fontsize=20)
+
+    ax.set_ylabel('Time')
+    ax.set_xlabel('Vertex')
+
+    ax.grid(True)
+    ax.legend()
+
+    # зберігаємо графік
+    plt.savefig(f'tests_density/plot_{density}.png')
+    plt.show()
+    plt.close()
+
+
+def print_single_test(lst_of_graphs: list[tuple[int, int]], vertex: dict[int, bool]):
+    """
+    намалювати граф по вершинам та ребрам
+
+    :param lst_of_graphs:
+    :param vertex:
+    :return:
+    """
+    graph = nx.Graph()
+
+
+    graph.add_nodes_from(vertex)
+    graph.add_edges_from(lst_of_graphs)
+
+    nx.draw(graph, with_labels=True, arrows=True, node_color='lightblue', edge_color='gray', node_size=250)
+    plt.axis('off')
+    plt.show()

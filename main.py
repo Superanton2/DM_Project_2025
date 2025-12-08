@@ -3,7 +3,8 @@ import time
 from Algorithm import topological_sort_matrix, topological_sort_list
 from graph_generator import graph_generator, get_vertex
 from helper_function import print_start, lst_input_to_int, input_to_int, BLUE, RESET, RED
-from tester import test_parameters, test_all, print_single_test
+from tester import test_parameters, test_all
+from data_visualization import print_single_test
 
 
 def tester():
@@ -11,7 +12,7 @@ def tester():
         print()
         print(f"{BLUE}Now you can test algorithm on different tests{RESET}")
 
-        choice = lst_input_to_int(["Test particular parameters", "Test All", "Quit"])
+        choice = lst_input_to_int(["Test particular parameters", "Test All", "Quit   ₍^. .^₎⟆"])
         if choice == 1:
             test_parameters()
         elif choice == 2:
@@ -20,12 +21,12 @@ def tester():
             break
 
 
-
-
 def demonstration():
     while True:
         print()
         print(f"{BLUE}Now you can interact with algorithm directly{RESET}")
+
+        test_type = lst_input_to_int(["matrix", "list"])
 
         vertex = input_to_int("Say number of vertexes(20 to 200): ", min_value=20, max_value=200)
         density = input_to_int("Say density in % (0 to 100): ", min_value=0, max_value=100)
@@ -39,7 +40,10 @@ def demonstration():
         time_start = time.perf_counter()
 
         # алгоритм
-        result = topological_sort_matrix(lst_of_graphs, vertex)
+        if test_type == 1:
+            result = topological_sort_matrix(lst_of_graphs, vertex)
+        else:
+            result = topological_sort_list(adj_lst, vertex)
 
         # Stop the stopwatch / counter
         time_stop = time.perf_counter()
@@ -74,7 +78,7 @@ def main():
         print_start()
 
         print(f"{BLUE}Main {RESET}")
-        choice = lst_input_to_int(["Play on your own", "Testing", "Quit"])
+        choice = lst_input_to_int(["Play on your own", "Testing", "Quit   ₍^. .^₎⟆"])
 
         if choice == 1:
             demonstration()
@@ -82,7 +86,13 @@ def main():
             tester()
         else:
             break
-    print("Thanks for coming")
+
+    print("""
+\    /\  (Thanks for coming, НЯ)
+ )  ( ') /
+(  /  )
+ \(__)|""")
+
 
 if __name__ == '__main__':
     main()

@@ -1,93 +1,71 @@
 import time
 import sys
-import pandas as pd
-import matplotlib.pyplot as plt
-import networkx as nx
 
-from Algorithm import topological_sort_matrix
+from Algorithm import topological_sort_matrix, topological_sort_list
 from graph_generator import graph_generator, get_vertex
 from helper_function import lst_input_to_int, input_to_int, RED, RESET
+from data_visualization import  plot_test_on_vertex, plot_test_on_density
 
 
-def print_single_test(lst_of_graphs: list[tuple[int, int]], vertex: dict[int, bool]):
-    """
-    намалювати граф по вершинам та ребрам
-
-    :param lst_of_graphs:
-    :param vertex:
-    :return:
-    """
-    graph = nx.Graph()
-
-
-    graph.add_nodes_from(vertex)
-    graph.add_edges_from(lst_of_graphs)
-
-    nx.draw(graph, with_labels=True, arrows=True, node_color='lightblue', edge_color='gray', node_size=250)
-    plt.axis('off')
-    plt.show()
-
-def time_tracker(vertex: int, density: float) -> float:
+def time_tracker(vertex: int, density: float, matrix= True) -> float:
     lst_of_graphs, adj_lst = graph_generator(vertex, density, test=True)
 
     vertex = get_vertex(lst_of_graphs)
-    # print(vertex)
+    if matrix:
 
-    # Start the stopwatch / counter
-    time_start = time.perf_counter()
+        # Start the stopwatch / counter
+        time_start = time.perf_counter()
 
-    # функція
-    topological_sort_matrix(lst_of_graphs, vertex)
+        # функція
+        topological_sort_matrix(lst_of_graphs, vertex)
 
-    # Stop the stopwatch / counter
-    time_stop = time.perf_counter()
+        # Stop the stopwatch / counter
+        time_stop = time.perf_counter()
+
+    else:
+
+        # Start the stopwatch / counter
+        time_start = time.perf_counter()
+
+        # функція
+        topological_sort_list(adj_lst, vertex)
+
+        # Stop the stopwatch / counter
+        time_stop = time.perf_counter()
 
     return time_stop - time_start
 
 
-def plot_test_on_vertex(vertex: int, filename: str):
-    # читаємо данні з .csv
-    column_names = ['vertex_count', 'percentage of density', 'time']
-    df = pd.read_csv(filename, header=None, names=column_names)
-
-    fig, ax = plt.subplots(1, 1, figsize=(8, 6))
-
-    # рахуємо середнє значення
-    mean_values = df.groupby('percentage of density')['time'].mean()
-
-    ax.plot(df['percentage of density'], df['time'], 'o', alpha=0.5, color='green')
-    ax.plot(mean_values.index, mean_values.values, color='orange', linewidth=3, label='Середній час')
-
-
-    ax.set_title(f'Dependence of time on density in {vertex} vertex', fontsize=14)
-    ax.set_ylabel('Time')
-    ax.set_xlabel('Density')
-    ax.grid(True)
-    ax.legend()
-
-
-    # зберігаємо графік
-    plt.savefig(f'tests_vertex/plot_{vertex}.png')
-    plt.show()
-    plt.close()
-
 
 def test_on_vertex():
     print()
+    test_type = lst_input_to_int(["matrix", "list"])
     vertex = input_to_int("On what number of vertices will we make the test(20 to 200): ", min_value= 20, max_value= 200)
 
     filename = f'tests_vertex/test_{vertex}.csv'
+
+
     for density in range(10, 100, 10):
         density /= 100
 
         for _ in range(20):
-            test_time = time_tracker(vertex, density)
+
+            if test_type == 1:
+                test_time = time_tracker(vertex, density, matrix=True)
+            else:
+                test_time = time_tracker(vertex, density, matrix=False)
+
 
             with open(f"{filename}", "a") as file:
                 to_append = f"{vertex}, {density}, {test_time:10f}\n"
                 file.write(to_append)
 
-    print("Test finished")
+    print("Test finished", end= " ")
+    if test_type == 1:
+        print("for matrix")
+    else:
+        print("for list")
+
     print(f"Now yon can see your results in directory {filename}")
 
     print(f"Generating plot")
@@ -97,6 +75,7 @@ def test_on_vertex():
 
 def test_on_density():
     print()
+    test_type = lst_input_to_int(["matrix", "list"])
     density = input_to_int("On what persent of density will we make the test(0 to 100): ", min_value=0, max_value=100)
 
     filename = f'tests_density/test_{density}.csv'
@@ -104,7 +83,10 @@ def test_on_density():
     for vertex in range(20, 201, 10):
 
         for _ in range(20):
-            test_time = time_tracker(vertex, density)
+            if test_type == 1:
+                test_time = time_tracker(vertex, density, matrix=True)
+            else:
+                test_time = time_tracker(vertex, density, matrix=False)
 
             with open(f"{filename}", "a") as file:
                 to_append = f"{vertex}, {density}, {test_time:10f}\n"
@@ -118,42 +100,15 @@ def test_on_density():
     plot_test_on_density(density, filename)
 
 
-
     print()
 
 
-def plot_test_on_density(density, filename):
-    # читаємо данні з .csv
-    column_names = ['vertex_count', 'percentage of density', 'time']
-    df = pd.read_csv(filename, header=None, names=column_names)
-
-    fig, ax = plt.subplots(1, 1, figsize=(8, 6))
-
-    # рахуємо середнє значення
-    mean_values = df.groupby('percentage of density')['time'].mean()
-
-    # Побудова: X = df['percentage of density'], Y = df['time']
-    ax.plot(df['vertex_count'], df['time'], 'o', alpha=0.5, color='green')
-    ax.plot(mean_values.index, mean_values.values, color='orange', linewidth=3, label='Середній час')
-
-    ax.set_title(f'Dependence of time on {density}% density', fontsize=20)
-
-    ax.set_ylabel('Time')
-    ax.set_xlabel('Vertex')
-
-    ax.grid(True)
-    ax.legend()
-
-    # зберігаємо графік
-    plt.savefig(f'tests_vertex/plot_{density}.png')
-    plt.show()
-    plt.close()
 
 
 def test_parameters():
 
     while True:
-        choice = lst_input_to_int(["Test on number of vertex", "Test on density", "Quit"])
+        choice = lst_input_to_int(["Test on number of vertex", "Test on density", "Quit   ₍^. .^₎⟆"])
         if choice == 1:
             test_on_vertex()
         else:
@@ -171,10 +126,10 @@ def test_parameters():
 
 def test_all():
 
-    print("Start testing")
-    for vertex in range(20, 201, 10):
+    print("Start testing for matrix")
 
-        with open(f"tests_all/test_{vertex}.csv", "w") as file:
+    for vertex in range(20, 201, 10):
+        with open(f"tests_all/matrix/test_{vertex}.csv", "w") as file:
             file.write("number of vertex,percentage of density,time\n")
 
         # Форматуємо рядок для відображення прогресу
@@ -190,10 +145,39 @@ def test_all():
             density /= 100
 
             for _ in range(20):
-                test_time = time_tracker(vertex, density)
+                test_time = time_tracker(vertex, density,  matrix=True)
 
-                with open(f"tests_all/test_{vertex}.csv", "a") as file:
+                with open(f"tests_all/matrix/test_{vertex}.csv", "a") as file:
                     to_append = f"{vertex}, {density}, {test_time:10f}\n"
                     file.write(to_append)
     print("\nFinish testing")
+
+
+    print("Start testing for list")
+
+    for vertex in range(20, 201, 10):
+        with open(f"tests_all/list/test_{vertex}.csv", "w") as file:
+            file.write("number of vertex,percentage of density,time\n")
+
+        # Форматуємо рядок для відображення прогресу
+        output = f"progress: {vertex // 2}%"
+
+        # Виводимо рядок, використовуючи \r для повернення курсора
+        sys.stdout.write('\r' + output)
+
+        # Обов'язково викликаємо flush() для негайного відображення в терміналі
+        sys.stdout.flush()
+
+        for density in range(10, 100, 10):
+            density /= 100
+
+            for _ in range(20):
+                test_time = time_tracker(vertex, density, matrix=False)
+
+                with open(f"tests_all/list/test_{vertex}.csv", "a") as file:
+                    to_append = f"{vertex}, {density}, {test_time:10f}\n"
+                    file.write(to_append)
+    print("\nFinish testing")
+
     print("Now yon can see your results in directory tests_all/")
+    print("There are 2 directory. One for matrix and one for list")

@@ -46,13 +46,15 @@ def graph_generator(vertex: int, density: float, test= False):
 
     adjacency_lst = {}  # список суміжності
     for key in adjacency_matrix:
-        if not key in adjacency_lst:
+        if not key in adjacency_lst and adjacency_matrix[key] == 1:  # для кожної вершини,  якщо її немає в нашому списку суміжності, то ми створюємо пустий список, в який згодом додаватимемо вершини, до яких від першої йдуть ребра
             adjacency_lst.setdefault(key[0], []).append(key[1])
+        elif not key in adjacency_lst and not adjacency_matrix[key]:
+            adjacency_lst.setdefault(key[0], [])
         else:
-            adjacency_lst[key[0]].append(key[1])
+            adjacency_lst[key[0]].append(key[1])  # до списку суміжності для кожної вершини ми додаємо вершину, до якої є ребро
 
+    adjacency_lst.setdefault(vertex, [])
     return graphs, adjacency_lst
-
 
 
 def get_vertex(graph: list[tuple[int, int]]) -> dict[int, bool]:
