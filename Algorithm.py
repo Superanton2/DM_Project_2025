@@ -54,7 +54,7 @@ def topological_sort_matrix(graph: list[tuple[int, int]], vertexes: dict[int, bo
 
 
 
-def visit_vertex_list(graph: dict[int, int], vertexes: dict[int, bool], current_vertex: int, sorted_vertex: list[int]) -> list[int]:
+def visit_vertex_list(graph: dict[int, list[int]], vertexes: dict[int, bool], current_vertex: int, sorted_vertex: list[int]) -> list[int]:
     # позначаємо що ми відвідали вершину
     vertexes[current_vertex] = True
 
@@ -73,7 +73,7 @@ def visit_vertex_list(graph: dict[int, int], vertexes: dict[int, bool], current_
 
 
 
-def topological_sort_list(graph: dict[int, int], vertexes: dict[int, bool]) -> list[int]:
+def topological_sort_list(graph: dict[int, list[int]], vertexes: dict[int, bool]) -> list[int]:
     sorted_vertexes = []
 
     # проходимось по кожній вершині
