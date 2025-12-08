@@ -14,7 +14,7 @@ def search_global_maximum() -> float:
     print("Analyzing files to find maximum time...")
     for test_number in range(20, 201, 10):
 
-        filename = f'tests/test_{test_number}.csv'
+        filename = f'tests_all/test_{test_number}.csv'
 
         # якщо не існує такого файлу, то пишемо що не існує
         if not os.path.exists(filename):
@@ -51,7 +51,7 @@ def visualization():
 
     for vertex in range(20, 201, 10):
 
-        filename = f'tests/test_{vertex}.csv'
+        filename = f'tests_all/test_{vertex}.csv'
         print(f'open {filename}')
 
         # якщо не існує такого файлу, то пишемо що не існує
@@ -97,7 +97,7 @@ def visualization():
         fig.suptitle(f'Аналіз для {vertex} вершин', fontsize=16)
 
         # зберігаємо графік
-        plt.savefig(f'tests/plot_{vertex}.png')
+        plt.savefig(f'tests_all/plot_{vertex}.png')
 
         # Важливо: закриваємо фігуру, щоб очистити пам'ять,
         # інакше після 20 графіків комп'ютер може почати гальмувати
@@ -105,4 +105,54 @@ def visualization():
 
     print("Finish!")
 
-visualization()
+
+def get_stats():
+    pd.set_option('display.float_format', '{:.8f}'.format)
+
+    results = {}
+    for vertex in range(20, 201, 10):
+
+        df = pd.read_csv(f"tests_all/test_{vertex}.csv")
+
+        df_max_density = df[df['percentage of density'] == 0.9]
+        average_time_at_max_density = df_max_density['time'].mean()
+
+        k = average_time_at_max_density / 0.9
+        results[vertex] = k
+
+    for vertex, k_value in results.items():
+
+        formatted_k = f"{k_value:.18f}"
+        print(formatted_k)
+
+    vertices = list(results.keys())  # Ключі: Кількість вершин (X)
+    coefficients = list(results.values())  # Значення: Коефіцієнт k (Y)
+
+    ## 2. Створюємо графік 📈
+    plt.figure(figsize=(10, 6))  # Створюємо нову фігуру
+
+    # Побудова графіка:
+    # Використовуємо .plot() для створення лінії, 'o' - додаємо маркери
+    plt.plot(vertices, coefficients, marker='o', linestyle='-', color='blue', label='Коефіцієнт k')
+
+    ## 3. Налаштування осей та заголовків
+    plt.title('Залежність коефіцієнта k від кількості вершин')
+    plt.xlabel('Кількість вершин (Vertex)')
+    plt.ylabel('Коефіцієнт k (Середній час / 0.9)')
+
+    # Додаємо сітку для кращої читабельності
+    plt.grid(True, linestyle='--', alpha=0.7)
+
+    # Додаємо легенду (опис того, що відображає лінія)
+    plt.legend()
+
+    plt.show()
+
+
+    plt.savefig('coefficient_vertices.png')
+    plt.close()
+
+
+# visualization()
+# get_stats()
+
