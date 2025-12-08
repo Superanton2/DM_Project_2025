@@ -42,7 +42,7 @@
 > [!CAUTION]
 > !!!ВАЖЛИВО!!! час приблизний, оскільки він буде залежити від потужності центрального процесора !!!ВАЖЛИВО!!!
 
-<a href="url"><img src="https://github.com/Superanton2/DM_Project_2025/blob/main/photos/main_graph.png" align="left" height="350"></a>  
+<a href="url"><img src="https://github.com/Superanton2/DM_Project_2025/blob/main/photos/main_graph.png" align="left" height="300"></a>  
 
 
 
